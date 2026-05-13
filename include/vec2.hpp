@@ -7,14 +7,10 @@
 
 namespace zem::math {
 
-template <typename T>
-  requires MathScalar<T>
+template <MathScalar T>
 struct Vec2 {
   T x{0};
   T y{0};
-
-  constexpr Vec2() = default;
-  constexpr Vec2(T x, T y) noexcept : x(x), y(y) {}
 
   [[nodiscard]] friend constexpr bool operator==(Vec2, Vec2) noexcept = default;
 
@@ -44,39 +40,50 @@ struct Vec2 {
   }
 
   [[nodiscard]] friend constexpr Vec2 operator+(Vec2 lhs, Vec2 rhs) noexcept {
-    return lhs += rhs;
+    lhs += rhs;
+    return lhs;
   }
 
   [[nodiscard]] friend constexpr Vec2 operator-(Vec2 lhs, Vec2 rhs) noexcept {
-    return lhs -= rhs;
+    lhs -= rhs;
+    return lhs;
   }
 
   [[nodiscard]] friend constexpr Vec2 operator*(Vec2 lhs, T scalar) noexcept {
-    return lhs *= scalar;
+    lhs *= scalar;
+    return lhs;
   }
 
   [[nodiscard]] friend constexpr Vec2 operator*(T scalar, Vec2 rhs) noexcept {
-    return rhs *= scalar;
+    rhs *= scalar;
+    return rhs;
   }
 
   [[nodiscard]] friend constexpr Vec2 operator/(Vec2 lhs, T scalar) noexcept {
-    return lhs /= scalar;
+    lhs /= scalar;
+    return lhs;
   }
 
-  [[nodiscard]] constexpr Vec2 operator-() const noexcept { return {-x, -y}; }
-
-  [[nodiscard]] constexpr T Dot(Vec2 r) const noexcept {
-    return x * r.x + y * r.y;
+  [[nodiscard]] constexpr Vec2 operator-(this Vec2 self) noexcept {
+    return {-self.x, -self.y};
   }
 
-  [[nodiscard]] T Length() const noexcept
+  [[nodiscard]] constexpr T Dot(this Vec2 self, Vec2 rhs) noexcept {
+    return self.x * rhs.x + self.y * rhs.y;
+  }
+
+  [[nodiscard]] constexpr T Cross(this Vec2 self, Vec2 rhs) noexcept {
+    return self.x * rhs.y - self.y * rhs.x;
+  }
+
+  [[nodiscard]] T Length(this Vec2 self) noexcept
     requires std::floating_point<T>
   {
-    return std::sqrt(x * x + y * y);
+    return std::sqrt(self.x * self.x + self.y * self.y);
   }
 
-  [[nodiscard]] constexpr T LengthSquared() const noexcept {
-    return x * x + y * y;
+  [[nodiscard]] constexpr T LengthSquared(this Vec2 self) noexcept {
+    return self.x * self.x + self.y * self.y;
   }
 };
 
@@ -95,9 +102,17 @@ static_assert(std::is_trivially_copyable_v<Vec2u>,
               "Vec2 implementation is broken!");
 
 static_assert(sizeof(Vec2i) == sizeof(int) * 2, "Vec2i has padding issues!");
+static_assert(alignof(Vec2i) == alignof(int), "Vec2i alignment is broken!");
+
 static_assert(sizeof(Vec2f) == sizeof(float) * 2, "Vec2f has padding issues!");
+static_assert(alignof(Vec2f) == alignof(float), "Vec2f alignment is broken!");
+
 static_assert(sizeof(Vec2d) == sizeof(double) * 2, "Vec2d has padding issues!");
+static_assert(alignof(Vec2d) == alignof(double), "Vec2d alignment is broken!");
+
 static_assert(sizeof(Vec2u) == sizeof(unsigned int) * 2,
               "Vec2u has padding issues!");
+static_assert(alignof(Vec2u) == alignof(unsigned int),
+              "Vec2u alignment is broken!");
 
 }  // namespace zem::math
