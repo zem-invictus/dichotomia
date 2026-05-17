@@ -2,11 +2,12 @@
 
 #include <cmath>
 #include <concepts>
+#include <utility>
 
 #include "math_assert.h"
 #include "math_concepts.h"
 
-namespace zem::math {
+namespace zem::dich {
 template <MathScalar T>
 struct Vec4 {
   T x{0};
@@ -41,7 +42,7 @@ struct Vec4 {
   }
 
   constexpr Vec4& operator/=(T scalar) noexcept {
-    ZEM_MATH_EXPECTS(scalar != T{0});
+    DICHOTOMIA_EXPECTS(scalar != T{0});
     x /= scalar;
     y /= scalar;
     z /= scalar;
@@ -78,6 +79,38 @@ struct Vec4 {
     return {-self.x, -self.y, -self.z, -self.w};
   }
 
+  [[nodiscard]] constexpr T& operator[](size_t ind) noexcept {
+    DICHOTOMIA_EXPECTS(ind < 4);
+    switch (ind) {
+      case 0:
+        return x;
+      case 1:
+        return y;
+      case 2:
+        return z;
+      case 3:
+        return w;
+      default:
+        std::unreachable();
+    }
+  }
+
+  [[nodiscard]] constexpr T operator[](size_t ind) const noexcept {
+    DICHOTOMIA_EXPECTS(ind < 4);
+    switch (ind) {
+      case 0:
+        return x;
+      case 1:
+        return y;
+      case 2:
+        return z;
+      case 3:
+        return w;
+      default:
+        std::unreachable();
+    }
+  }
+
   [[nodiscard]] constexpr T Dot(this Vec4 self, Vec4 rhs) noexcept {
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + self.w * rhs.w;
   }
@@ -85,11 +118,13 @@ struct Vec4 {
   [[nodiscard]] T Length(this Vec4 self) noexcept
     requires std::floating_point<T>
   {
-    return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w);
+    return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z +
+                     self.w * self.w);
   }
 
   [[nodiscard]] constexpr T LengthSquared(this Vec4 self) noexcept {
-    return self.x * self.x + self.y * self.y + self.z * self.z + self.w * self.w;
+    return self.x * self.x + self.y * self.y + self.z * self.z +
+           self.w * self.w;
   }
 };
 
@@ -120,4 +155,4 @@ static_assert(sizeof(Vec4u) == sizeof(unsigned int) * 4,
               "Vec4u has padding issues!");
 static_assert(alignof(Vec4u) == alignof(unsigned int),
               "Vec4u alignment is broken!");
-}  // namespace zem::math
+}  // namespace zem::dich
