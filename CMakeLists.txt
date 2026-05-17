@@ -18,6 +18,7 @@ target_sources(dichotomia
         include/vec3.hpp
         include/vec4.hpp
         include/mat4.hpp
+        include/angle.hpp
         include/dichotomia.hpp
 )
 
