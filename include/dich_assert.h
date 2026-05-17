@@ -4,27 +4,27 @@
 
 #include "macros.h"
 
-namespace zem::math::internal {
+namespace dich::internal {
 [[noreturn]] inline void ReportFailure(const char* condition, const char* file,
                                        int line) noexcept {
   std::fprintf(stderr,
-               "[ZEM MATH PANIC] Contract violation: %s\nLocation: %s:%d\n",
+               "[DICHOTOMIA PANIC] Contract violation: %s\nLocation: %s:%d\n",
                condition, file, line);
   std::abort();
 }
-}  // namespace zem::math::internal
+}  // namespace zem::dich::internal
 
-#ifdef ZEM_MATH_DEBUG
+#ifdef DICHOTOMIA_DEBUG
 
-#define ZEM_MATH_EXPECTS(condition)                                         \
+#define DICHOTOMIA_EXPECTS(condition)                                       \
   do {                                                                      \
     if (!(condition)) [[unlikely]] {                                        \
-      ::zem::math::internal::ReportFailure(#condition, __FILE__, __LINE__); \
+      ::dich::internal::ReportFailure(#condition, __FILE__, __LINE__); \
     }                                                                       \
   } while (false)
 #else
-#define ZEM_MATH_EXPECTS(condition) \
-  do {                              \
-    ZEM_ASSUME(condition);          \
+#define DICHOTOMIA_EXPECTS(condition) \
+  do {                                \
+    DICHOTOMIA_ASSUME(condition);     \
   } while (false)
 #endif
