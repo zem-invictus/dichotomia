@@ -1,10 +1,11 @@
 #pragma once
 #include <cmath>
+#include <utility>
 
-#include "math_assert.h"
-#include "math_concepts.h"
+#include "dich_assert.h"
+#include "dich_concepts.h"
 
-namespace zem::math {
+namespace dich {
 template <MathScalar T>
 struct Vec3 {
   T x{0};
@@ -71,6 +72,34 @@ struct Vec3 {
     return {-self.x, -self.y, -self.z};
   }
 
+  [[nodiscard]] constexpr T operator[](size_t ind) const noexcept {
+    DICHOTOMIA_EXPECTS(ind < 3);
+    switch (ind) {
+      case 0:
+        return x;
+      case 1:
+        return y;
+      case 2:
+        return z;
+      default:
+        std::unreachable();
+    }
+  }
+
+  [[nodiscard]] constexpr T& operator[](size_t ind) noexcept {
+    DICHOTOMIA_EXPECTS(ind < 3);
+    switch (ind) {
+      case 0:
+        return x;
+      case 1:
+        return y;
+      case 2:
+        return z;
+      default:
+        std::unreachable();
+    }
+  }
+
   [[nodiscard]] constexpr T Dot(this Vec3 self, Vec3 rhs) noexcept {
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z;
   }
@@ -119,4 +148,4 @@ static_assert(sizeof(Vec3u) == sizeof(unsigned int) * 3,
               "Vec3u has padding issues!");
 static_assert(alignof(Vec3u) == alignof(unsigned int),
               "Vec3u alignment is broken!");
-}  // namespace zem::math
+}  // namespace dich

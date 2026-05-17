@@ -69,7 +69,7 @@ struct Vec2 {
     return {-self.x, -self.y};
   }
 
-  [[nodiscard]] constexpr T operator[](size_t ind) noexcept {
+  [[nodiscard]] constexpr T operator[](size_t ind) const noexcept {
     DICHOTOMIA_EXPECTS(ind < 2);
     switch (ind) {
       case 0:
@@ -81,7 +81,7 @@ struct Vec2 {
     }
   }
 
-  [[nodiscard]] constexpr T& operator[](size_t ind) const noexcept {
+  [[nodiscard]] constexpr T& operator[](size_t ind) noexcept {
     DICHOTOMIA_EXPECTS(ind < 2);
     switch (ind) {
       case 0:
