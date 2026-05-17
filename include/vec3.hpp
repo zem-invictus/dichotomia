@@ -36,7 +36,7 @@ struct Vec3 {
   }
 
   constexpr Vec3& operator/=(T scalar) noexcept {
-    ZEM_MATH_EXPECTS(scalar != T{0});
+    DICHOTOMIA_EXPECTS(scalar != T{0});
     x /= scalar;
     y /= scalar;
     z /= scalar;
