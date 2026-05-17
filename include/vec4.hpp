@@ -7,7 +7,7 @@
 #include "dich_assert.h"
 #include "dich_concepts.h"
 
-namespace dich {
+namespace dich::math {
 template <MathScalar T>
 struct Vec4 {
   T x{0};
