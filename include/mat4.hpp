@@ -11,7 +11,7 @@ template <MathScalar T>
 struct Mat4 {
   Vec4<T> cols[4];
 
-  [[nodiscard]] static constexpr Mat4& Identity() noexcept {
+  [[nodiscard]] static constexpr Mat4 Identity() noexcept {
     return {.cols = {{T{1}, T{0}, T{0}, T{0}},
                      {T{0}, T{1}, T{0}, T{0}},
                      {T{0}, T{0}, T{1}, T{0}},
@@ -221,4 +221,8 @@ struct Mat4 {
   [[nodiscard]] T* data() noexcept { return &cols[0][0]; }
   [[nodiscard]] const T* data() const noexcept { return &cols[0][0]; }
 };
+
+using Mat4f = Mat4<float>;
+using Mat4d = Mat4<double>;
+
 }  // namespace dich::math

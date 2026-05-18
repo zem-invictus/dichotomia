@@ -35,8 +35,8 @@ struct Quat {
     const T cr = std::cos(roll.value * T{0.5});
     const T sr = std::sin(roll.value * T{0.5});
 
-    return {sr * cp * cy - cr * sp * sy, cr * sp * cy + sr * cp * sy,
-            cr * cp * sy - sr * sp * cy, cr * cp * cy + sr * sp * sy};
+    return {sp * cy * cr - cp * sy * sr, cp * sy * cr + sp * cy * sr,
+            cp * cy * sr - sp * sy * cr, cp * cy * cr + sp * sy * sr};
   }
 
   [[nodiscard]] static Quat Slerp(Quat q1, Quat q2, T t) noexcept {
@@ -126,5 +126,8 @@ struct Quat {
             lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z};
   }
 };
+
+using Quatf = Quat<float>;
+using Quatd = Quat<double>;
 
 }  // namespace dich::math
