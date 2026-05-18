@@ -55,4 +55,9 @@ namespace literals {
 
 }  // namespace literals
 
+using Radiansf = Radians<float>;
+using Radiansd = Radians<double>;
+using Degreesf = Degrees<float>;
+using Degreesd = Degrees<double>;
+
 }  // namespace dich::math
