@@ -14,7 +14,7 @@ include(GoogleTest)
 
 macro(dichotomia_add_test test_name)
     add_executable(${test_name} ${test_name}.cpp)
-    target_link_libraries(${test_name} PRIVATE zem::dichotomia GTest::gtest_main)
+    target_link_libraries(${test_name} PRIVATE dichotomia::dichotomia GTest::gtest_main)
     gtest_discover_tests(${test_name})
 endmacro()
 

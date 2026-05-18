@@ -1,8 +1,8 @@
-# Dichotomia (zem_math) v1.0
+# Dichotomia v1.0
 
 A minimalistic, modern C++23 math library for basic 3D graphics applications. It currently provides core linear algebra components with an emphasis on `constexpr` and modern C++ features.
 
-![CI](https://github.com/your-username/zem_math/actions/workflows/ci.yml/badge.svg)
+![CI](https://github.com/Waldemarsch/dichotomia/actions/workflows/ci.yml/badge.svg)
 
 ## Features
 - **Vectors (`Vec2`, `Vec3`, `Vec4`)**: Fully templated, `constexpr` arithmetic, strict ISO C++ `operator[]` using `std::unreachable()`.
@@ -19,14 +19,14 @@ Dichotomia is a header-only library (using `INTERFACE` CMake targets). Add it to
 include(FetchContent)
 
 FetchContent_Declare(
-    zem_math
-    GIT_REPOSITORY https://github.com/your-username/zem_math.git
+    dichotomia
+    GIT_REPOSITORY https://github.com/Waldemarsch/dichotomia.git
     GIT_TAG main
 )
-FetchContent_MakeAvailable(zem_math)
+FetchContent_MakeAvailable(dichotomia)
 
 # Link your target
-target_link_libraries(your_engine PRIVATE zem::dichotomia)
+target_link_libraries(your_engine PRIVATE dichotomia::dichotomia)
 ```
 
 ### Example

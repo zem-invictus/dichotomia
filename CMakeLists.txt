@@ -22,7 +22,7 @@ target_sources(dichotomia
         include/dichotomia.hpp
 )
 
-add_library(zem::dichotomia ALIAS dichotomia)
+add_library(dichotomia::dichotomia ALIAS dichotomia)
 
 target_compile_features(dichotomia INTERFACE cxx_std_23)
 
