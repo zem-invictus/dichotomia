@@ -66,7 +66,7 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static constexpr Mat4 Perspective(Radians<T> fovy, T aspect, T z_near, T z_far) noexcept {
+  [[nodiscard]] static Mat4 Perspective(Radians<T> fovy, T aspect, T z_near, T z_far) noexcept {
     DICHOTOMIA_EXPECTS(aspect != T{0});
     DICHOTOMIA_EXPECTS(z_near != z_far);
 
@@ -99,7 +99,7 @@ struct Mat4 {
     return result;
   }
 
-  [[nodiscard]] static constexpr Mat4 LookAt(Vec3<T> eye, Vec3<T> center, Vec3<T> up) noexcept {
+  [[nodiscard]] static Mat4 LookAt(Vec3<T> eye, Vec3<T> center, Vec3<T> up) noexcept {
     const Vec3<T> f = (center - eye).Normalized();
     const Vec3<T> s = f.Cross(up).Normalized();
     const Vec3<T> u = s.Cross(f);

@@ -115,7 +115,7 @@ struct Vec4 {
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + self.w * rhs.w;
   }
 
-  [[nodiscard]] constexpr T Length(this Vec4 self) noexcept
+  [[nodiscard]] T Length(this Vec4 self) noexcept
     requires std::floating_point<T>
   {
     return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z +
@@ -127,7 +127,7 @@ struct Vec4 {
            self.w * self.w;
   }
 
-  constexpr Vec4& Normalize() noexcept
+  Vec4& Normalize() noexcept
     requires std::floating_point<T>
   {
     const T len = Length();
@@ -139,7 +139,7 @@ struct Vec4 {
     return *this;
   }
 
-  [[nodiscard]] constexpr Vec4 Normalized(this Vec4 self) noexcept
+  [[nodiscard]] Vec4 Normalized(this Vec4 self) noexcept
     requires std::floating_point<T>
   {
     const T len = self.Length();

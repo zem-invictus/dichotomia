@@ -43,4 +43,5 @@ target_include_directories(dichotomia INTERFACE
 if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     enable_testing()
     add_subdirectory(tests)
+    add_subdirectory(benchmarks)
 endif()
