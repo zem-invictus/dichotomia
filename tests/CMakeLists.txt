@@ -10,13 +10,17 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
 
-
-add_executable(test_vec3 test_vec3.cpp)
-
-target_link_libraries(test_vec3 PRIVATE
-        zem::dichotomia
-        GTest::gtest_main
-)
-
 include(GoogleTest)
-gtest_discover_tests(test_vec3)
+
+macro(dichotomia_add_test test_name)
+    add_executable(${test_name} ${test_name}.cpp)
+    target_link_libraries(${test_name} PRIVATE zem::dichotomia GTest::gtest_main)
+    gtest_discover_tests(${test_name})
+endmacro()
+
+dichotomia_add_test(test_angle)
+dichotomia_add_test(test_vec2)
+dichotomia_add_test(test_vec3)
+dichotomia_add_test(test_vec4)
+dichotomia_add_test(test_mat4)
+dichotomia_add_test(test_quat)
