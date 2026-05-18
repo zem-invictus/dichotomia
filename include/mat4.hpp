@@ -18,7 +18,7 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static Mat4 RotationX(Radians rads) noexcept {
+  [[nodiscard]] static Mat4 RotationX(Radians<T> rads) noexcept {
     const T s = std::sin(rads.value);
     const T c = std::cos(rads.value);
     return {.cols = {{T{1}, T{0}, T{0}, T{0}},
@@ -27,7 +27,7 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static Mat4 RotationY(Radians rads) noexcept {
+  [[nodiscard]] static Mat4 RotationY(Radians<T> rads) noexcept {
     const T s = std::sin(rads.value);
     const T c = std::cos(rads.value);
     return {.cols = {{c, T{0}, -s, T{0}},
@@ -36,7 +36,7 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static Mat4 RotationZ(Radians rads) noexcept {
+  [[nodiscard]] static Mat4 RotationZ(Radians<T> rads) noexcept {
     const T s = std::sin(rads.value);
     const T c = std::cos(rads.value);
     return {.cols = {{c, s, T{0}, T{0}},
