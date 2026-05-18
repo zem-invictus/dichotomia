@@ -87,7 +87,7 @@ struct Quat {
     return res;
   }
 
-  [[nodiscard]] constexpr T Length(this Quat self) noexcept
+  [[nodiscard]] T Length(this Quat self) noexcept
     requires std::floating_point<T>
   {
     return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z +
@@ -99,7 +99,7 @@ struct Quat {
            self.w * self.w;
   }
 
-  constexpr Quat& Normalize() noexcept
+  Quat& Normalize() noexcept
     requires std::floating_point<T>
   {
     const T len = Length();
@@ -111,7 +111,7 @@ struct Quat {
     return *this;
   }
 
-  [[nodiscard]] constexpr Quat Normalized(this Quat self) noexcept
+  [[nodiscard]] Quat Normalized(this Quat self) noexcept
     requires std::floating_point<T>
   {
     const T len = self.Length();
@@ -119,11 +119,30 @@ struct Quat {
     return {self.x / len, self.y / len, self.z / len, self.w / len};
   }
 
+  [[nodiscard]] constexpr Quat Conjugate(this Quat self) noexcept {
+    return {-self.x, -self.y, -self.z, self.w};
+  }
+
+  [[nodiscard]] Quat Inverse(this Quat self) noexcept
+    requires std::floating_point<T>
+  {
+    const T len_sq = self.LengthSquared();
+    DICHOTOMIA_EXPECTS(len_sq > T{0});
+    const T inv_len_sq = T{1} / len_sq;
+    return {-self.x * inv_len_sq, -self.y * inv_len_sq, -self.z * inv_len_sq, self.w * inv_len_sq};
+  }
+
   [[nodiscard]] friend constexpr Quat operator*(Quat lhs, Quat rhs) noexcept {
     return {lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
             lhs.w * rhs.y - lhs.x * rhs.z + lhs.y * rhs.w + lhs.z * rhs.x,
             lhs.w * rhs.z + lhs.x * rhs.y - lhs.y * rhs.x + lhs.z * rhs.w,
             lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z};
+  }
+
+  [[nodiscard]] friend constexpr Vec3<T> operator*(Quat lhs, Vec3<T> rhs) noexcept {
+    const Vec3<T> q_vec{lhs.x, lhs.y, lhs.z};
+    const Vec3<T> t = T{2} * q_vec.Cross(rhs);
+    return rhs + lhs.w * t + q_vec.Cross(t);
   }
 };
 
