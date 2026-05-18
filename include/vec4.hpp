@@ -115,7 +115,7 @@ struct Vec4 {
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + self.w * rhs.w;
   }
 
-  [[nodiscard]] T Length(this Vec4 self) noexcept
+  [[nodiscard]] constexpr T Length(this Vec4 self) noexcept
     requires std::floating_point<T>
   {
     return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z +
@@ -125,6 +125,26 @@ struct Vec4 {
   [[nodiscard]] constexpr T LengthSquared(this Vec4 self) noexcept {
     return self.x * self.x + self.y * self.y + self.z * self.z +
            self.w * self.w;
+  }
+
+  constexpr Vec4& Normalize() noexcept
+    requires std::floating_point<T>
+  {
+    const T len = Length();
+    DICHOTOMIA_EXPECTS(len > T{0});
+    x /= len;
+    y /= len;
+    z /= len;
+    w /= len;
+    return *this;
+  }
+
+  [[nodiscard]] constexpr Vec4 Normalized(this Vec4 self) noexcept
+    requires std::floating_point<T>
+  {
+    const T len = self.Length();
+    DICHOTOMIA_EXPECTS(len > T{0});
+    return {self.x / len, self.y / len, self.z / len, self.w / len};
   }
 };
 
@@ -155,4 +175,4 @@ static_assert(sizeof(Vec4u) == sizeof(unsigned int) * 4,
               "Vec4u has padding issues!");
 static_assert(alignof(Vec4u) == alignof(unsigned int),
               "Vec4u alignment is broken!");
-}  // namespace zem::dich
+}  // namespace dich::math
