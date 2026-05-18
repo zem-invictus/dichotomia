@@ -22,9 +22,13 @@ target_sources(dichotomia
         include/dichotomia.hpp
 )
 
-add_library(zem::dich ALIAS dich)
+add_library(zem::dichotomia ALIAS dichotomia)
 
 target_compile_features(dichotomia INTERFACE cxx_std_23)
+
+if(MSVC)
+    target_compile_options(dichotomia INTERFACE /std:c++latest)
+endif()
 
 target_compile_definitions(dichotomia
         INTERFACE

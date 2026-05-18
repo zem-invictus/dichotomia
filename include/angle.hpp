@@ -1,50 +1,63 @@
 #pragma once
 #include <numbers>
 
+#include "dich_concepts.h"
+
 namespace dich::math {
 
+template <MathScalar T>
 struct Radians {
-  float value{0.0f};
+  T value = T{0};
 
   constexpr Radians() noexcept = default;
-  explicit constexpr Radians(float v) noexcept : value(v) {}
+  explicit constexpr Radians(T v) noexcept : value(v) {}
 };
 
+template <MathScalar T>
 struct Degrees {
-  float value{0.0f};
+  T value = T{0};
 
   constexpr Degrees() noexcept = default;
-  explicit constexpr Degrees(float v) noexcept : value(v) {}
+  explicit constexpr Degrees(T v) noexcept : value(v) {}
 };
 
-[[nodiscard]] constexpr Degrees ToDegrees(Radians radians) noexcept {
-  return Degrees(radians.value * (180.0f / std::numbers::pi_v<float>));
+template <MathScalar T>
+[[nodiscard]] constexpr Degrees<T> ToDegrees(Radians<T> radians) noexcept {
+  return Degrees(radians.value * (T{180} / std::numbers::pi_v<T>));
 }
 
-[[nodiscard]] constexpr Radians ToRadians(Degrees degrees) noexcept {
-  return Radians(degrees.value * (std::numbers::pi_v<float> / 180.0f));
+template <MathScalar T>
+[[nodiscard]] constexpr Radians<T> ToRadians(Degrees<T> degrees) noexcept {
+  return Radians(degrees.value * (std::numbers::pi_v<T> / T{180}));
 }
 
 namespace literals {
 
-[[nodiscard]] constexpr Radians operator""_rad(long double val) noexcept {
+[[nodiscard]] constexpr Radians<float> operator""_rad(
+    long double val) noexcept {
   return Radians(static_cast<float>(val));
 }
 
-[[nodiscard]] constexpr Degrees operator""_deg(long double val) noexcept {
+[[nodiscard]] constexpr Degrees<float> operator""_deg(
+    long double val) noexcept {
   return Degrees(static_cast<float>(val));
 }
 
-[[nodiscard]] constexpr Radians operator""_rad(
+[[nodiscard]] constexpr Radians<float> operator""_rad(
     unsigned long long val) noexcept {
   return Radians(static_cast<float>(val));
 }
 
-[[nodiscard]] constexpr Degrees operator""_deg(
+[[nodiscard]] constexpr Degrees<float> operator""_deg(
     unsigned long long val) noexcept {
   return Degrees(static_cast<float>(val));
 }
 
 }  // namespace literals
+
+using Radiansf = Radians<float>;
+using Radiansd = Radians<double>;
+using Degreesf = Degrees<float>;
+using Degreesd = Degrees<double>;
 
 }  // namespace dich::math

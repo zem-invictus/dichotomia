@@ -36,7 +36,7 @@ struct Vec3 {
   }
 
   constexpr Vec3& operator/=(T scalar) noexcept {
-    ZEM_MATH_EXPECTS(scalar != T{0});
+    DICHOTOMIA_EXPECTS(scalar != T{0});
     x /= scalar;
     y /= scalar;
     z /= scalar;
@@ -110,7 +110,7 @@ struct Vec3 {
             .z = self.x * rhs.y - self.y * rhs.x};
   }
 
-  [[nodiscard]] T Length(this Vec3 self) noexcept
+  [[nodiscard]] constexpr T Length(this Vec3 self) noexcept
     requires std::floating_point<T>
   {
     return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
@@ -118,6 +118,25 @@ struct Vec3 {
 
   [[nodiscard]] constexpr T LengthSquared(this Vec3 self) noexcept {
     return self.x * self.x + self.y * self.y + self.z * self.z;
+  }
+
+  constexpr Vec3& Normalize() noexcept
+    requires std::floating_point<T>
+  {
+    const T len = Length();
+    DICHOTOMIA_EXPECTS(len > T{0});
+    x /= len;
+    y /= len;
+    z /= len;
+    return *this;
+  }
+
+  [[nodiscard]] constexpr Vec3 Normalized(this Vec3 self) noexcept
+    requires std::floating_point<T>
+  {
+    const T len = self.Length();
+    DICHOTOMIA_EXPECTS(len > T{0});
+    return {self.x / len, self.y / len, self.z / len};
   }
 };
 

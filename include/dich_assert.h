@@ -12,7 +12,7 @@ namespace dich::internal {
                condition, file, line);
   std::abort();
 }
-}  // namespace zem::dich::internal
+}  // namespace dich::internal
 
 #ifdef DICHOTOMIA_DEBUG
 
