@@ -167,4 +167,4 @@ static_assert(sizeof(Vec3u) == sizeof(unsigned int) * 3,
               "Vec3u has padding issues!");
 static_assert(alignof(Vec3u) == alignof(unsigned int),
               "Vec3u alignment is broken!");
-}  // namespace dich
+}  // namespace dich::math
