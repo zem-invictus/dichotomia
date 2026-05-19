@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 
 #include "angle.hpp"
 #include "dich_concepts.h"
@@ -67,6 +66,7 @@ struct Mat4 {
   }
 
   [[nodiscard]] static Mat4 Perspective(Radians<T> fovy, T aspect, T z_near, T z_far) noexcept {
+    DICHOTOMIA_EXPECTS(fovy.value > T{0});
     DICHOTOMIA_EXPECTS(aspect != T{0});
     DICHOTOMIA_EXPECTS(z_near != z_far);
 
@@ -100,6 +100,7 @@ struct Mat4 {
   }
 
   [[nodiscard]] static Mat4 LookAt(Vec3<T> eye, Vec3<T> center, Vec3<T> up) noexcept {
+    DICHOTOMIA_EXPECTS(eye != center);
     const Vec3<T> f = (center - eye).Normalized();
     const Vec3<T> s = f.Cross(up).Normalized();
     const Vec3<T> u = s.Cross(f);
