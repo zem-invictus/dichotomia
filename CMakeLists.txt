@@ -4,6 +4,8 @@ project(dichotomia VERSION 1.0.0 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+option(DICHOTOMIA_BUILD_PYTHON_BINDINGS "Build nanobind Python bindings" OFF)
+
 add_library(dichotomia INTERFACE)
 
 target_sources(dichotomia
@@ -44,4 +46,16 @@ if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
     enable_testing()
     add_subdirectory(tests)
     add_subdirectory(benchmarks)
+endif()
+
+if(DICHOTOMIA_BUILD_PYTHON_BINDINGS)
+    find_package(Python 3.8 COMPONENTS Interpreter Development.Module REQUIRED)
+    include(FetchContent)
+    FetchContent_Declare(
+      nanobind
+      GIT_REPOSITORY https://github.com/wjakob/nanobind.git
+      GIT_TAG v2.4.0
+    )
+    FetchContent_MakeAvailable(nanobind)
+    add_subdirectory(bindings/python)
 endif()
