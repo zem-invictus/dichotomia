@@ -12,6 +12,9 @@ authors = [
   { name="Waldemarsch" },
 ]
 
+[project.optional-dependencies]
+test = ["pytest", "pytest-benchmark", "PyGLM", "numpy"]
+
 [tool.scikit-build]
 cmake.args = ["-DDICHOTOMIA_BUILD_PYTHON_BINDINGS=ON"]
 cmake.build-type = "Release"

@@ -1,5 +1,6 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
+#include <nanobind/stl/string.h>
 #include "dichotomia.hpp"
 
 namespace nb = nanobind;
@@ -7,7 +8,7 @@ using namespace dich::math;
 
 void bind_quaternions(nb::module_& m) {
     nb::class_<Quatf>(m, "Quatf")
-        .def("__init__", [](Quatf *t, float x, float y, float z, float w) { new (t) Quatf{x, y, z, w}; }, nb::arg("x") = 0.0f, nb::arg("y") = 0.0f, nb::arg("z") = 0.0f, nb::arg("w") = 1.0f)
+        .def(nb::init<float, float, float, float>(), nb::arg("x") = 0.0f, nb::arg("y") = 0.0f, nb::arg("z") = 0.0f, nb::arg("w") = 1.0f)
         .def_rw("x", &Quatf::x)
         .def_rw("y", &Quatf::y)
         .def_rw("z", &Quatf::z)

@@ -1,5 +1,6 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
+#include <new>
 #include "dichotomia.hpp"
 
 namespace nb = nanobind;
@@ -7,7 +8,7 @@ using namespace dich::math;
 
 void bind_matrices(nb::module_& m) {
     nb::class_<Mat4f>(m, "Mat4f")
-        .def("__init__", [](Mat4f *t) { new (t) Mat4f{Mat4f::Identity()}; }) // Default to identity
+        .def("__init__", [](Mat4f *t) { new (t) Mat4f(Mat4f::Identity()); })
         .def_static("Identity", &Mat4f::Identity)
         .def_static("RotationX", [](float rad) { return Mat4f::RotationX(Radians<float>{rad}); }, nb::arg("rad"))
         .def_static("RotationY", [](float rad) { return Mat4f::RotationY(Radians<float>{rad}); }, nb::arg("rad"))
