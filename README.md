@@ -29,6 +29,22 @@ Dichotomia leverages C++23 `[[assume]]` contracts and explicit object parameters
 
 *(GLM typically wins in `Normalize` due to explicit hardware `rsqrt` intrinsics).*
 
+## Python Bindings (Fast 3D Math for Python)
+
+**Stop using Numpy for single 3D vectors!**
+Dichotomia is designed as a high-performance **surgical scalpel for gameplay scripting**. 
+If you are doing data-oriented processing on millions of vectors at once, use `numpy`. But if you are writing OOP-style gameplay logic in your engine where you manipulate one entity at a time, `numpy`'s runtime type checking, array allocation, and GIL overhead will kill your framerate.
+
+Dichotomia provides C++23 native scalar math bound to Python via `nanobind`. It operates directly on the stack with zero heap allocation overhead, making it up to **120x faster** than `numpy` for basic operations:
+
+| Benchmark (nanoseconds) | Numpy | PyGLM | dichotomia (Python) |
+| :--- | :--- | :--- | :--- |
+| `Vec3 Cross` | 11,710 ns | 134 ns | **96 ns** (120x faster than Numpy) |
+| `Vec3 Normalize` | 1,279 ns | 111 ns | **91 ns** (14x faster than Numpy) |
+| `Quat Slerp` | N/A | 151 ns | **133 ns** (10% faster than PyGLM) |
+
+*(Note: PyGLM currently outperforms Dichotomia in `Mat4` multiplication, which we plan to address in upcoming SIMD updates).*
+
 ## Usage
 
 Dichotomia is a header-only library (using `INTERFACE` CMake targets). Add it to your project via `FetchContent`:
@@ -74,4 +90,46 @@ mkdir build && cd build
 cmake ..
 make
 ctest --output-on-failure
+```
+
+### Installation & Usage (Python)
+You can install the Python bindings directly via `pip`:
+```bash
+# Clone the repository
+git clone https://github.com/Waldemarsch/dichotomia.git
+cd dichotomia
+
+# Install into your environment
+pip install .
+```
+
+```python
+import dichotomia as dich
+import math
+
+v1 = dich.Vec3f(1.0, 0.0, 0.0)
+q = dich.Quatf.FromAxisAngle(dich.Vec3f(0.0, 1.0, 0.0), math.pi / 2.0)
+v2 = q * v1 # Rotates v1 by 90 degrees around Y axis
+```
+
+### Troubleshooting
+**Python.h not found / Build fails:**
+You need the Python development headers installed on your system.
+```bash
+sudo apt install python3-dev
+# or specifically for 3.12:
+sudo apt install python3.12-dev
+```
+
+**"externally-managed-environment" error when running `pip install`:**
+Modern Linux distributions block global pip installations to prevent breaking system tools. Always use a virtual environment:
+```bash
+# Create a virtual environment
+python -m venv .venv
+
+# Activate it
+source .venv/bin/activate
+
+# Now you can install packages safely
+pip install pytest pytest-benchmark PyGLM numpy
 ```
