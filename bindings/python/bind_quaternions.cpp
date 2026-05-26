@@ -1,6 +1,7 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/ndarray.h>
 #include "dichotomia.hpp"
 
 namespace nb = nanobind;
@@ -27,5 +28,9 @@ void bind_quaternions(nb::module_& m) {
         .def("Inverse", &Quatf::Inverse)
         .def(nb::self * nb::self)
         .def(nb::self * Vec3f())
+        .def("__array__", [](Quatf &q, nb::kwargs) {
+            size_t shape[1] = {4};
+            return nb::ndarray<nb::numpy, float, nb::shape<4>>(&q.x, 1, shape, nb::cast(q));
+        })
         .def("__repr__", [](const Quatf& q) { return "Quatf(" + std::to_string(q.x) + ", " + std::to_string(q.y) + ", " + std::to_string(q.z) + ", " + std::to_string(q.w) + ")"; });
 }

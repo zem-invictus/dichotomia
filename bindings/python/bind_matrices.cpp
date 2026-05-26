@@ -1,6 +1,7 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
 #include <new>
+#include <nanobind/ndarray.h>
 #include "dichotomia.hpp"
 
 namespace nb = nanobind;
@@ -24,5 +25,9 @@ void bind_matrices(nb::module_& m) {
         .def("Determinant", &Mat4f::Determinant)
         .def("Inverse", &Mat4f::Inverse)
         .def(nb::self * nb::self)
-        .def(nb::self * Vec4f());
+        .def(nb::self * Vec4f())
+        .def("__array__", [](Mat4f &m, nb::kwargs) {
+            size_t shape[2] = {4, 4};
+            return nb::ndarray<nb::numpy, float, nb::shape<4, 4>>(&m.cols[0].x, 2, shape, nb::cast(m));
+        });
 }

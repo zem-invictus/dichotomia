@@ -3,6 +3,13 @@ set_target_properties(dichotomia_py PROPERTIES OUTPUT_NAME "dichotomia")
 
 target_link_libraries(dichotomia_py PRIVATE dichotomia::dichotomia)
 
+nanobind_add_stub(
+    dichotomia_py_stub
+    MODULE dichotomia
+    OUTPUT "${CMAKE_CURRENT_BINARY_DIR}/dichotomia.pyi"
+    DEPENDS dichotomia_py
+)
+
 # Optional: set C++23 explicitly for the binding module just in case
 target_compile_features(dichotomia_py PRIVATE cxx_std_23)
 

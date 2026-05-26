@@ -1,6 +1,7 @@
 #include <nanobind/nanobind.h>
 #include <nanobind/operators.h>
 #include <nanobind/stl/string.h>
+#include <nanobind/ndarray.h>
 #include "dichotomia.hpp"
 
 namespace nb = nanobind;
@@ -24,6 +25,10 @@ void bind_vectors(nb::module_& m) {
         .def("LengthSquared", &Vec2f::LengthSquared)
         .def("Normalize", &Vec2f::Normalize)
         .def("Normalized", &Vec2f::Normalized)
+        .def("__array__", [](Vec2f &v, nb::kwargs) {
+            size_t shape[1] = {2};
+            return nb::ndarray<nb::numpy, float, nb::shape<2>>(&v.x, 1, shape, nb::cast(v));
+        })
         .def("__repr__", [](const Vec2f& v) { return "Vec2f(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ")"; });
 
     nb::class_<Vec3f>(m, "Vec3f")
@@ -44,6 +49,10 @@ void bind_vectors(nb::module_& m) {
         .def("LengthSquared", &Vec3f::LengthSquared)
         .def("Normalize", &Vec3f::Normalize)
         .def("Normalized", &Vec3f::Normalized)
+        .def("__array__", [](Vec3f &v, nb::kwargs) {
+            size_t shape[1] = {3};
+            return nb::ndarray<nb::numpy, float, nb::shape<3>>(&v.x, 1, shape, nb::cast(v));
+        })
         .def("__repr__", [](const Vec3f& v) { return "Vec3f(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ")"; });
 
     nb::class_<Vec4f>(m, "Vec4f")
@@ -64,5 +73,9 @@ void bind_vectors(nb::module_& m) {
         .def("LengthSquared", &Vec4f::LengthSquared)
         .def("Normalize", &Vec4f::Normalize)
         .def("Normalized", &Vec4f::Normalized)
+        .def("__array__", [](Vec4f &v, nb::kwargs) {
+            size_t shape[1] = {4};
+            return nb::ndarray<nb::numpy, float, nb::shape<4>>(&v.x, 1, shape, nb::cast(v));
+        })
         .def("__repr__", [](const Vec4f& v) { return "Vec4f(" + std::to_string(v.x) + ", " + std::to_string(v.y) + ", " + std::to_string(v.z) + ", " + std::to_string(v.w) + ")"; });
 }
