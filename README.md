@@ -45,6 +45,23 @@ Dichotomia provides C++23 native scalar math bound to Python via `nanobind`. It 
 
 *(Note: PyGLM currently outperforms Dichotomia in `Mat4` multiplication, which we plan to address in upcoming SIMD updates).*
 
+### Zero-Copy Numpy Integration
+Dichotomia implements the Python **Buffer Protocol** (`__array__`). This allows you to pass our C++ math objects directly into `numpy` without any memory copying. Numpy reads the C++ memory directly!
+
+```python
+import numpy as np
+import dichotomia as dich
+import math
+
+mat = dich.Mat4f.RotationX(math.pi)
+
+# Zero-copy conversion! Reads C++ memory directly
+arr = np.array(mat, copy=False)
+```
+
+### Native Type Hinting
+When you install the bindings, we automatically generate and ship `.pyi` stub files. This guarantees **100% IDE auto-completion** (PyCharm, VSCode) and strict type checking (mypy) out of the box, with zero manual configuration.
+
 ## Usage
 
 Dichotomia is a header-only library (using `INTERFACE` CMake targets). Add it to your project via `FetchContent`:
