@@ -1,5 +1,13 @@
+/**
+ * @file macros.h
+ * @brief Utility macros for the dichotomia library.
+ */
 #pragma once
 
+/**
+ * @def DICHOTOMIA_ASSUME
+ * @brief Compiler-specific hint for optimization based on conditions.
+ */
 #if defined(__cpp_assume) // C++23 standard feature test macro
   #define DICHOTOMIA_ASSUME(cond) [[assume(cond)]]
 #elif defined(__clang__)

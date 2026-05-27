@@ -6,10 +6,18 @@
 #include "vec4.hpp"
 
 namespace dich::math {
+/**
+ * @brief 4x4 Matrix template class (column-major order).
+ * @tparam T Underlying scalar type (e.g., float, double).
+ */
 template <MathScalar T>
 struct Mat4 {
-  Vec4<T> cols[4];
+  Vec4<T> cols[4]; ///< Array of 4 column vectors.
 
+  /**
+   * @brief Returns an identity matrix.
+   * @return 4x4 Identity matrix.
+   */
   [[nodiscard]] static constexpr Mat4 Identity() noexcept {
     return {.cols = {{T{1}, T{0}, T{0}, T{0}},
                      {T{0}, T{1}, T{0}, T{0}},
@@ -44,6 +52,11 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
+  /**
+   * @brief Creates a translation matrix.
+   * @param trans 3D translation vector.
+   * @return 4x4 translation matrix.
+   */
   [[nodiscard]] static constexpr Mat4 Translation(Vec3<T> trans) noexcept {
     return {.cols = {{T{1}, T{0}, T{0}, T{0}},
                      {T{0}, T{1}, T{0}, T{0}},
@@ -65,6 +78,14 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
+  /**
+   * @brief Creates a right-handed perspective projection matrix (Zero-to-One Depth).
+   * @param fovy Field of view in the Y direction (in radians).
+   * @param aspect Aspect ratio (width / height).
+   * @param z_near Near clipping plane distance.
+   * @param z_far Far clipping plane distance.
+   * @return 4x4 perspective matrix.
+   */
   [[nodiscard]] static Mat4 Perspective(Radians<T> fovy, T aspect, T z_near, T z_far) noexcept {
     DICHOTOMIA_EXPECTS(fovy.value > T{0});
     DICHOTOMIA_EXPECTS(aspect != T{0});
@@ -82,6 +103,16 @@ struct Mat4 {
     return result;
   }
 
+  /**
+   * @brief Creates an orthographic projection matrix.
+   * @param left Left clipping plane.
+   * @param right Right clipping plane.
+   * @param bottom Bottom clipping plane.
+   * @param top Top clipping plane.
+   * @param z_near Near clipping plane.
+   * @param z_far Far clipping plane.
+   * @return 4x4 orthographic matrix.
+   */
   [[nodiscard]] static constexpr Mat4 Orthographic(T left, T right, T bottom, T top, T z_near, T z_far) noexcept {
     DICHOTOMIA_EXPECTS(left != right);
     DICHOTOMIA_EXPECTS(bottom != top);
@@ -99,6 +130,13 @@ struct Mat4 {
     return result;
   }
 
+  /**
+   * @brief Creates a "Look At" view matrix.
+   * @param eye Camera position.
+   * @param center Target point to look at.
+   * @param up Up vector direction.
+   * @return 4x4 view matrix.
+   */
   [[nodiscard]] static Mat4 LookAt(Vec3<T> eye, Vec3<T> center, Vec3<T> up) noexcept {
     DICHOTOMIA_EXPECTS(eye != center);
     const Vec3<T> f = (center - eye).Normalized();
@@ -125,6 +163,10 @@ struct Mat4 {
     return result;
   }
 
+  /**
+   * @brief Calculates the determinant of the matrix.
+   * @return Matrix determinant.
+   */
   [[nodiscard]] constexpr T Determinant() const noexcept {
     const T a00 = cols[0][0], a01 = cols[0][1], a02 = cols[0][2], a03 = cols[0][3];
     const T a10 = cols[1][0], a11 = cols[1][1], a12 = cols[1][2], a13 = cols[1][3];
@@ -147,6 +189,11 @@ struct Mat4 {
     return b00 * b11 - b01 * b10 + b02 * b09 + b03 * b08 - b04 * b07 + b05 * b06;
   }
 
+  /**
+   * @brief Calculates the inverse of the matrix.
+   * @note Expects the matrix determinant to be non-zero.
+   * @return The inverted 4x4 matrix.
+   */
   [[nodiscard]] constexpr Mat4 Inverse() const noexcept {
     const T a00 = cols[0][0], a01 = cols[0][1], a02 = cols[0][2], a03 = cols[0][3];
     const T a10 = cols[1][0], a11 = cols[1][1], a12 = cols[1][2], a13 = cols[1][3];

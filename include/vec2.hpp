@@ -8,10 +8,14 @@
 
 namespace dich::math {
 
+/**
+ * @brief 2D Vector template class.
+ * @tparam T Underlying scalar type (e.g., float, double, int).
+ */
 template <MathScalar T>
 struct Vec2 {
-  T x{0};
-  T y{0};
+  T x{0}; ///< X component
+  T y{0}; ///< Y component
 
   [[nodiscard]] friend constexpr bool operator==(Vec2, Vec2) noexcept = default;
 
@@ -93,24 +97,47 @@ struct Vec2 {
     }
   }
 
+  /**
+   * @brief Calculates the dot product of this vector and another.
+   * @param rhs The other vector.
+   * @return The dot product value.
+   */
   [[nodiscard]] constexpr T Dot(this Vec2 self, Vec2 rhs) noexcept {
     return self.x * rhs.x + self.y * rhs.y;
   }
 
+  /**
+   * @brief Calculates the 2D cross product (determinant) with another vector.
+   * @param rhs The other vector.
+   * @return The 2D cross product value (a scalar).
+   */
   [[nodiscard]] constexpr T Cross(this Vec2 self, Vec2 rhs) noexcept {
     return self.x * rhs.y - self.y * rhs.x;
   }
 
+  /**
+   * @brief Calculates the length (magnitude) of the vector.
+   * @return The vector length.
+   */
   [[nodiscard]] T Length(this Vec2 self) noexcept
     requires std::floating_point<T>
   {
     return std::sqrt(self.x * self.x + self.y * self.y);
   }
 
+  /**
+   * @brief Calculates the squared length of the vector (avoids sqrt).
+   * @return The squared length.
+   */
   [[nodiscard]] constexpr T LengthSquared(this Vec2 self) noexcept {
     return self.x * self.x + self.y * self.y;
   }
 
+  /**
+   * @brief Normalizes the vector in-place.
+   * @note Expects the vector length to be greater than zero.
+   * @return Reference to the normalized vector.
+   */
   Vec2& Normalize() noexcept
     requires std::floating_point<T>
   {
@@ -121,6 +148,11 @@ struct Vec2 {
     return *this;
   }
 
+  /**
+   * @brief Returns a normalized copy of the vector.
+   * @note Expects the vector length to be greater than zero.
+   * @return A new vector with length 1.0.
+   */
   [[nodiscard]] Vec2 Normalized(this Vec2 self) noexcept
     requires std::floating_point<T>
   {

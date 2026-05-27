@@ -8,16 +8,26 @@
 
 namespace dich::math {
 
+/**
+ * @brief Quaternion template class for representing 3D rotations.
+ * @tparam T Underlying scalar type (e.g., float, double).
+ */
 template <MathScalar T>
 struct Quat {
-  T x{0};
-  T y{0};
-  T z{0};
-  T w{1};
+  T x{0}; ///< Imaginary X component
+  T y{0}; ///< Imaginary Y component
+  T z{0}; ///< Imaginary Z component
+  T w{1}; ///< Real W component
 
   constexpr Quat() noexcept = default;
   constexpr Quat(T x, T y, T z, T w) noexcept : x(x), y(y), z(z), w(w) {}
 
+  /**
+   * @brief Creates a quaternion from an axis and an angle.
+   * @param axis The rotation axis (should be normalized).
+   * @param angle The rotation angle in radians.
+   * @return A new quaternion representing the rotation.
+   */
   [[nodiscard]] static Quat FromAxisAngle(Vec3<T> axis,
                                           Radians<T> angle) noexcept {
     const T half_angle = angle.value / T{2};
@@ -26,6 +36,13 @@ struct Quat {
     return {axis.x * s, axis.y * s, axis.z * s, c};
   }
 
+  /**
+   * @brief Creates a quaternion from Euler angles (Pitch, Yaw, Roll).
+   * @param pitch Rotation around X axis.
+   * @param yaw Rotation around Y axis.
+   * @param roll Rotation around Z axis.
+   * @return A new quaternion representing the combined rotation.
+   */
   [[nodiscard]] static Quat FromEuler(Radians<T> pitch, Radians<T> yaw,
                                       Radians<T> roll) noexcept {
     const T cp = std::cos(pitch.value * T{0.5});
@@ -39,6 +56,13 @@ struct Quat {
             cp * cy * sr - sp * sy * cr, cp * cy * cr + sp * sy * sr};
   }
 
+  /**
+   * @brief Spherical linear interpolation between two quaternions.
+   * @param q1 Starting quaternion.
+   * @param q2 Ending quaternion.
+   * @param t Interpolation factor [0, 1].
+   * @return Interpolated quaternion.
+   */
   [[nodiscard]] static Quat Slerp(Quat q1, Quat q2, T t) noexcept {
     T cos_omega = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 
@@ -63,6 +87,10 @@ struct Quat {
             q1.w * k1 + q2.w * k2};
   }
 
+  /**
+   * @brief Converts the quaternion to a 4x4 rotation matrix.
+   * @return A 4x4 rotation matrix.
+   */
   [[nodiscard]] constexpr Mat4<T> ToMat4(this Quat self) noexcept {
     Mat4<T> res = Mat4<T>::Identity();
 
@@ -132,6 +160,12 @@ struct Quat {
     return {-self.x * inv_len_sq, -self.y * inv_len_sq, -self.z * inv_len_sq, self.w * inv_len_sq};
   }
 
+  /**
+   * @brief Multiplies two quaternions (combines rotations).
+   * @param lhs The left quaternion.
+   * @param rhs The right quaternion.
+   * @return The combined rotation quaternion.
+   */
   [[nodiscard]] friend constexpr Quat operator*(Quat lhs, Quat rhs) noexcept {
     return {lhs.w * rhs.x + lhs.x * rhs.w + lhs.y * rhs.z - lhs.z * rhs.y,
             lhs.w * rhs.y - lhs.x * rhs.z + lhs.y * rhs.w + lhs.z * rhs.x,
@@ -139,6 +173,12 @@ struct Quat {
             lhs.w * rhs.w - lhs.x * rhs.x - lhs.y * rhs.y - lhs.z * rhs.z};
   }
 
+  /**
+   * @brief Rotates a 3D vector using this quaternion.
+   * @param lhs The quaternion representing the rotation.
+   * @param rhs The vector to be rotated.
+   * @return The rotated vector.
+   */
   [[nodiscard]] friend constexpr Vec3<T> operator*(Quat lhs, Vec3<T> rhs) noexcept {
     const Vec3<T> q_vec{lhs.x, lhs.y, lhs.z};
     const Vec3<T> t = T{2} * q_vec.Cross(rhs);
