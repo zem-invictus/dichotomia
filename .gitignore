@@ -1,3 +1,7 @@
 .venv
-cmake-build-debug
-cmake-build-release
+cmake-build-*
+build/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
