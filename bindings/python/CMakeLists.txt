@@ -13,6 +13,9 @@ nanobind_add_stub(
 # Optional: set C++23 explicitly for the binding module just in case
 target_compile_features(dichotomia_py PRIVATE cxx_std_23)
 
+install(TARGETS dichotomia_py DESTINATION .)
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/dichotomia.pyi" DESTINATION .)
+
 if(CMAKE_PROJECT_NAME STREQUAL "dichotomia")
     add_test(NAME python_bindings_test
              COMMAND Python::Interpreter -m pytest "${CMAKE_CURRENT_SOURCE_DIR}/tests")
