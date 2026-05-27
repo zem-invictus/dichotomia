@@ -1,8 +1,9 @@
 # Dichotomia v1.0
 
-A minimalistic, modern C++23 math library for basic 3D graphics applications. It currently provides core linear algebra components with an emphasis on `constexpr` and modern C++ features.
+A minimalistic, modern C++23 math library for basic 3D graphics applications. It provides core linear algebra components with an emphasis on `constexpr` and modern C++ features, alongside seamless, high-performance Python bindings via `nanobind` (with full NumPy buffer protocol support).
 
 ![CI](https://github.com/Waldemarsch/dichotomia/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Features
 - **Vectors** (`Vec2`, `Vec3`, `Vec4`): Fully templated, `constexpr` arithmetic, strict ISO C++ `operator[]` using `std::unreachable()`.
@@ -150,3 +151,7 @@ source .venv/bin/activate
 # Now you can install packages safely
 pip install pytest pytest-benchmark PyGLM numpy
 ```
+
+## License
+Dichotomia is licensed under the [MIT License](LICENSE).
+See [LICENSE-3RD-PARTY](LICENSE-3RD-PARTY) for third-party licenses.
