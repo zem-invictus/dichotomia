@@ -1,3 +1,7 @@
+/**
+ * @file dich_assert.h
+ * @brief Custom assertion and contract checking for dichotomia.
+ */
 #pragma once
 #include <cstdio>
 #include <cstdlib>
