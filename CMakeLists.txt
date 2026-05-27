@@ -59,3 +59,16 @@ if(DICHOTOMIA_BUILD_PYTHON_BINDINGS)
     FetchContent_MakeAvailable(nanobind)
     add_subdirectory(bindings/python)
 endif()
+
+# Documentation
+find_package(Doxygen OPTIONAL_COMPONENTS dot)
+if(DOXYGEN_FOUND)
+    configure_file(${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile.in ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile @ONLY)
+    add_custom_target(docs ALL
+        COMMAND Doxygen::doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
+        WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
+        COMMENT "Generating API documentation with Doxygen"
+        VERBATIM
+    )
+    add_dependencies(dichotomia docs)
+endif()
