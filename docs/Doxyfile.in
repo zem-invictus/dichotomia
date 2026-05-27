@@ -1,0 +1,48 @@
+PROJECT_NAME           = "Dichotomia"
+PROJECT_NUMBER         = "@PROJECT_VERSION@"
+PROJECT_BRIEF          = "Modern C++23 High-Performance Math Library"
+OUTPUT_DIRECTORY       = "@CMAKE_CURRENT_BINARY_DIR@/doxygen"
+INPUT                  = "@CMAKE_CURRENT_SOURCE_DIR@/include" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/README.md"
+USE_MDFILE_AS_MAINPAGE = "@CMAKE_CURRENT_SOURCE_DIR@/README.md"
+
+RECURSIVE              = YES
+GENERATE_LATEX         = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
+GENERATE_HTML          = YES
+GENERATE_TREEVIEW      = YES
+DISABLE_INDEX          = NO
+
+# Doxygen Awesome CSS setup
+HTML_EXTRA_STYLESHEET  = "@CMAKE_CURRENT_SOURCE_DIR@/docs/theme/doxygen-awesome.css" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/docs/theme/doxygen-awesome-sidebar-only.css" \
+                         "@CMAKE_CURRENT_SOURCE_DIR@/docs/theme/doxygen-awesome-sidebar-only-darkmode-toggle.css"
+
+HTML_HEADER            = 
+HTML_FOOTER            = 
+
+# Configure toggle script
+HTML_COLORSTYLE_HUE    = 209
+HTML_COLORSTYLE_SAT    = 255
+HTML_COLORSTYLE_GAMMA  = 80
+
+# C++ extraction rules
+EXTRACT_ALL            = YES
+EXTRACT_PRIVATE        = NO
+EXTRACT_STATIC         = YES
+WARNINGS               = YES
+WARN_IF_UNDOCUMENTED   = NO
+SHOW_INCLUDE_FILES     = YES
+INLINE_INFO            = YES
+SORT_MEMBER_DOCS       = YES
+GENERATE_TODOLIST      = YES
+GENERATE_TESTLIST      = YES
+GENERATE_BUGLIST       = YES
+GENERATE_DEPRECATEDLIST= YES
+
+# Preprocessor
+ENABLE_PREPROCESSING   = YES
+MACRO_EXPANSION        = YES
+SEARCH_INCLUDES        = YES

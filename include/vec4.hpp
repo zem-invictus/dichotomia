@@ -8,12 +8,16 @@
 #include "dich_concepts.h"
 
 namespace dich::math {
+/**
+ * @brief 4D Vector template class (homogeneous coordinates).
+ * @tparam T Underlying scalar type (e.g., float, double, int).
+ */
 template <MathScalar T>
 struct Vec4 {
-  T x{0};
-  T y{0};
-  T z{0};
-  T w{0};
+  T x{0}; ///< X component
+  T y{0}; ///< Y component
+  T z{0}; ///< Z component
+  T w{0}; ///< W component
 
   [[nodiscard]] friend constexpr bool operator==(Vec4, Vec4) noexcept = default;
 
@@ -111,10 +115,19 @@ struct Vec4 {
     }
   }
 
+  /**
+   * @brief Calculates the dot product of this vector and another.
+   * @param rhs The other vector.
+   * @return The dot product value.
+   */
   [[nodiscard]] constexpr T Dot(this Vec4 self, Vec4 rhs) noexcept {
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z + self.w * rhs.w;
   }
 
+  /**
+   * @brief Calculates the length (magnitude) of the vector.
+   * @return The vector length.
+   */
   [[nodiscard]] T Length(this Vec4 self) noexcept
     requires std::floating_point<T>
   {
@@ -122,11 +135,20 @@ struct Vec4 {
                      self.w * self.w);
   }
 
+  /**
+   * @brief Calculates the squared length of the vector (avoids sqrt).
+   * @return The squared length.
+   */
   [[nodiscard]] constexpr T LengthSquared(this Vec4 self) noexcept {
     return self.x * self.x + self.y * self.y + self.z * self.z +
            self.w * self.w;
   }
 
+  /**
+   * @brief Normalizes the vector in-place.
+   * @note Expects the vector length to be greater than zero.
+   * @return Reference to the normalized vector.
+   */
   Vec4& Normalize() noexcept
     requires std::floating_point<T>
   {
@@ -139,6 +161,11 @@ struct Vec4 {
     return *this;
   }
 
+  /**
+   * @brief Returns a normalized copy of the vector.
+   * @note Expects the vector length to be greater than zero.
+   * @return A new vector with length 1.0.
+   */
   [[nodiscard]] Vec4 Normalized(this Vec4 self) noexcept
     requires std::floating_point<T>
   {

@@ -6,11 +6,15 @@
 #include "dich_concepts.h"
 
 namespace dich::math {
+/**
+ * @brief 3D Vector template class.
+ * @tparam T Underlying scalar type (e.g., float, double, int).
+ */
 template <MathScalar T>
 struct Vec3 {
-  T x{0};
-  T y{0};
-  T z{0};
+  T x{0}; ///< X component
+  T y{0}; ///< Y component
+  T z{0}; ///< Z component
 
   [[nodiscard]] friend constexpr bool operator==(Vec3, Vec3) noexcept = default;
 
@@ -100,26 +104,49 @@ struct Vec3 {
     }
   }
 
+  /**
+   * @brief Calculates the dot product of this vector and another.
+   * @param rhs The other vector.
+   * @return The dot product value.
+   */
   [[nodiscard]] constexpr T Dot(this Vec3 self, Vec3 rhs) noexcept {
     return self.x * rhs.x + self.y * rhs.y + self.z * rhs.z;
   }
 
+  /**
+   * @brief Calculates the cross product of this vector and another.
+   * @param rhs The other vector.
+   * @return A new vector representing the cross product.
+   */
   [[nodiscard]] constexpr Vec3 Cross(this Vec3 self, Vec3 rhs) noexcept {
     return {.x = self.y * rhs.z - self.z * rhs.y,
             .y = self.z * rhs.x - self.x * rhs.z,
             .z = self.x * rhs.y - self.y * rhs.x};
   }
 
+  /**
+   * @brief Calculates the length (magnitude) of the vector.
+   * @return The vector length.
+   */
   [[nodiscard]] T Length(this Vec3 self) noexcept
     requires std::floating_point<T>
   {
     return std::sqrt(self.x * self.x + self.y * self.y + self.z * self.z);
   }
 
+  /**
+   * @brief Calculates the squared length of the vector (avoids sqrt).
+   * @return The squared length.
+   */
   [[nodiscard]] constexpr T LengthSquared(this Vec3 self) noexcept {
     return self.x * self.x + self.y * self.y + self.z * self.z;
   }
 
+  /**
+   * @brief Normalizes the vector in-place.
+   * @note Expects the vector length to be greater than zero.
+   * @return Reference to the normalized vector.
+   */
   Vec3& Normalize() noexcept
     requires std::floating_point<T>
   {
@@ -131,6 +158,11 @@ struct Vec3 {
     return *this;
   }
 
+  /**
+   * @brief Returns a normalized copy of the vector.
+   * @note Expects the vector length to be greater than zero.
+   * @return A new vector with length 1.0.
+   */
   [[nodiscard]] Vec3 Normalized(this Vec3 self) noexcept
     requires std::floating_point<T>
   {

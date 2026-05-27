@@ -1,14 +1,15 @@
 # Dichotomia v1.0
 
-A minimalistic, modern C++23 math library for basic 3D graphics applications. It currently provides core linear algebra components with an emphasis on `constexpr` and modern C++ features.
+A minimalistic, modern C++23 math library for basic 3D graphics applications. It provides core linear algebra components with an emphasis on `constexpr` and modern C++ features, alongside seamless, high-performance Python bindings via `nanobind` (with full NumPy buffer protocol support).
 
 ![CI](https://github.com/Waldemarsch/dichotomia/actions/workflows/ci.yml/badge.svg)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
 
 ## Features
-- **Vectors (`Vec2`, `Vec3`, `Vec4`)**: Fully templated, `constexpr` arithmetic, strict ISO C++ `operator[]` using `std::unreachable()`.
-- **Matrices (`Mat4`)**: 4x4 matrix operations, fast `Inverse` and `Determinant`, `Perspective`, `Orthographic`, `LookAt` (RH Zero-to-One standard).
-- **Quaternions (`Quat`)**: Fast Euler-to-Quaternion conversion, Spherical Linear Interpolation (`Slerp`), rotation matrices.
-- **Angles (`Radians`, `Degrees`)**: Type-safe angle structs with user-defined literals (`180.0_deg`, `3.14_rad`).
+- **Vectors** (`Vec2`, `Vec3`, `Vec4`): Fully templated, `constexpr` arithmetic, strict ISO C++ `operator[]` using `std::unreachable()`.
+- **Matrices** (`Mat4`): 4x4 matrix operations, fast `Inverse` and `Determinant`, `Perspective`, `Orthographic`, `LookAt` (RH Zero-to-One standard).
+- **Quaternions** (`Quat`): Fast Euler-to-Quaternion conversion, Spherical Linear Interpolation (`Slerp`), rotation matrices.
+- **Angles** (`Radians`, `Degrees`): Type-safe angle structs with user-defined literals (`180.0_deg`, `3.14_rad`).
 - **Standardized**: Zero-warning compilation, 100% Google C++ Style Guide compliant, complete Google Test coverage.
 
 ## Performance
@@ -27,7 +28,7 @@ Dichotomia leverages C++23 `[[assume]]` contracts and explicit object parameters
 | `Quat * Quat` | 1.94 ns | **1.73 ns** |
 | `Vec3::Normalize`| 1.89 ns | **1.38 ns** |
 
-*(GLM typically wins in `Normalize` due to explicit hardware `rsqrt` intrinsics).*
+<em>(GLM typically wins in <code>Normalize</code> due to explicit hardware <code>rsqrt</code> intrinsics).</em>
 
 ## Python Bindings (Fast 3D Math for Python)
 
@@ -43,7 +44,7 @@ Dichotomia provides C++23 native scalar math bound to Python via `nanobind`. It 
 | `Vec3 Normalize` | 1,279 ns | 111 ns | **91 ns** (14x faster than Numpy) |
 | `Quat Slerp` | N/A | 151 ns | **133 ns** (10% faster than PyGLM) |
 
-*(Note: PyGLM currently outperforms Dichotomia in `Mat4` multiplication, which we plan to address in upcoming SIMD updates).*
+<em>(Note: PyGLM currently outperforms Dichotomia in <code>Mat4</code> multiplication, which we plan to address in upcoming SIMD updates).</em>
 
 ### Zero-Copy Numpy Integration
 Dichotomia implements the Python **Buffer Protocol** (`__array__`). This allows you to pass our C++ math objects directly into `numpy` without any memory copying. Numpy reads the C++ memory directly!
@@ -138,7 +139,7 @@ sudo apt install python3-dev
 sudo apt install python3.12-dev
 ```
 
-**"externally-managed-environment" error when running `pip install`:**
+<b>"externally-managed-environment" error when running <code>pip install</code>:</b>
 Modern Linux distributions block global pip installations to prevent breaking system tools. Always use a virtual environment:
 ```bash
 # Create a virtual environment
@@ -150,3 +151,7 @@ source .venv/bin/activate
 # Now you can install packages safely
 pip install pytest pytest-benchmark PyGLM numpy
 ```
+
+## License
+Dichotomia is licensed under the [MIT License](LICENSE).
+See [LICENSE-3RD-PARTY](LICENSE-3RD-PARTY) for third-party licenses.
