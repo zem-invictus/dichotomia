@@ -136,11 +136,11 @@ struct Mat4 {
     Mat4 result = Identity();
     result.cols[0][0] = T{2} / (right - left);
     result.cols[1][1] = T{2} / (top - bottom);
-    result.cols[2][2] = -T{2} / (z_far - z_near);
+    result.cols[2][2] = -T{1} / (z_far - z_near);
 
     result.cols[3][0] = -(right + left) / (right - left);
     result.cols[3][1] = -(top + bottom) / (top - bottom);
-    result.cols[3][2] = -(z_far + z_near) / (z_far - z_near);
+    result.cols[3][2] = -z_near / (z_far - z_near);
 
     return result;
   }
