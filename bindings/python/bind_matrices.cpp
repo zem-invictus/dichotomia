@@ -28,6 +28,7 @@ void bind_matrices(nb::module_& m) {
         .def(nb::self * Vec4f())
         .def("__array__", [](Mat4f &m, nb::kwargs) {
             size_t shape[2] = {4, 4};
-            return nb::ndarray<nb::numpy, float, nb::shape<4, 4>>(&m.cols[0].x, 2, shape, nb::cast(m));
+            int64_t strides[2] = {1, 4};
+            return nb::ndarray<nb::numpy, float, nb::shape<4, 4>>(&m.cols[0].x, 2, shape, nb::cast(m), strides);
         });
 }
