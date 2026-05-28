@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <type_traits>
 
 #include "angle.hpp"
 #include "dich_concepts.h"
@@ -22,6 +23,8 @@ struct Quat {
   constexpr Quat() noexcept = default;
   constexpr Quat(T x, T y, T z, T w) noexcept : x(x), y(y), z(z), w(w) {}
 
+  [[nodiscard]] friend constexpr bool operator==(Quat, Quat) noexcept = default;
+
   /**
    * @brief Creates a quaternion from an axis and an angle.
    * @param axis The rotation axis (should be normalized).
@@ -29,7 +32,9 @@ struct Quat {
    * @return A new quaternion representing the rotation.
    */
   [[nodiscard]] static Quat FromAxisAngle(Vec3<T> axis,
-                                          Radians<T> angle) noexcept {
+                                          Radians<T> angle) noexcept
+    requires std::floating_point<T>
+  {
     const T half_angle = angle.value / T{2};
     const T s = std::sin(half_angle);
     const T c = std::cos(half_angle);
@@ -44,7 +49,9 @@ struct Quat {
    * @return A new quaternion representing the combined rotation.
    */
   [[nodiscard]] static Quat FromEuler(Radians<T> pitch, Radians<T> yaw,
-                                      Radians<T> roll) noexcept {
+                                      Radians<T> roll) noexcept 
+    requires std::floating_point<T>
+  {
     const T cp = std::cos(pitch.value * T{0.5});
     const T sp = std::sin(pitch.value * T{0.5});
     const T cy = std::cos(yaw.value * T{0.5});
@@ -63,7 +70,9 @@ struct Quat {
    * @param t Interpolation factor [0, 1].
    * @return Interpolated quaternion.
    */
-  [[nodiscard]] static Quat Slerp(Quat q1, Quat q2, T t) noexcept {
+  [[nodiscard]] static Quat Slerp(Quat q1, Quat q2, T t) noexcept 
+    requires std::floating_point<T>
+  {
     T cos_omega = q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
 
     if (cos_omega < 0) {
@@ -91,7 +100,9 @@ struct Quat {
    * @brief Converts the quaternion to a 4x4 rotation matrix.
    * @return A 4x4 rotation matrix.
    */
-  [[nodiscard]] constexpr Mat4<T> ToMat4(this Quat self) noexcept {
+  [[nodiscard]] constexpr Mat4<T> ToMat4(this Quat self) noexcept 
+    requires std::floating_point<T>
+  {
     Mat4<T> res = Mat4<T>::Identity();
 
     const T xx = self.x * self.x;
@@ -188,5 +199,12 @@ struct Quat {
 
 using Quatf = Quat<float>;
 using Quatd = Quat<double>;
+
+static_assert(std::is_trivially_copyable_v<Quatf>, "Quatf implementation is broken!");
+static_assert(std::is_trivially_copyable_v<Quatd>, "Quatd implementation is broken!");
+static_assert(sizeof(Quatf) == sizeof(float) * 4, "Quatf has padding issues!");
+static_assert(alignof(Quatf) == alignof(float), "Quatf alignment is broken!");
+static_assert(sizeof(Quatd) == sizeof(double) * 4, "Quatd has padding issues!");
+static_assert(alignof(Quatd) == alignof(double), "Quatd alignment is broken!");
 
 }  // namespace dich::math

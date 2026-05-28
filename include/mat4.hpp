@@ -1,5 +1,8 @@
 #pragma once
 
+#include <cstddef>
+#include <type_traits>
+
 #include "angle.hpp"
 #include "dich_concepts.h"
 #include "vec3.hpp"
@@ -14,6 +17,8 @@ template <MathScalar T>
 struct Mat4 {
   Vec4<T> cols[4]; ///< Array of 4 column vectors.
 
+  [[nodiscard]] friend constexpr bool operator==(const Mat4&, const Mat4&) noexcept = default;
+
   /**
    * @brief Returns an identity matrix.
    * @return 4x4 Identity matrix.
@@ -25,7 +30,9 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static Mat4 RotationX(Radians<T> rads) noexcept {
+  [[nodiscard]] static Mat4 RotationX(Radians<T> rads) noexcept 
+    requires std::floating_point<T>
+  {
     const T s = std::sin(rads.value);
     const T c = std::cos(rads.value);
     return {.cols = {{T{1}, T{0}, T{0}, T{0}},
@@ -34,7 +41,9 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static Mat4 RotationY(Radians<T> rads) noexcept {
+  [[nodiscard]] static Mat4 RotationY(Radians<T> rads) noexcept 
+    requires std::floating_point<T>
+  {
     const T s = std::sin(rads.value);
     const T c = std::cos(rads.value);
     return {.cols = {{c, T{0}, -s, T{0}},
@@ -43,7 +52,9 @@ struct Mat4 {
                      {T{0}, T{0}, T{0}, T{1}}}};
   }
 
-  [[nodiscard]] static Mat4 RotationZ(Radians<T> rads) noexcept {
+  [[nodiscard]] static Mat4 RotationZ(Radians<T> rads) noexcept 
+    requires std::floating_point<T>
+  {
     const T s = std::sin(rads.value);
     const T c = std::cos(rads.value);
     return {.cols = {{c, s, T{0}, T{0}},
@@ -86,7 +97,9 @@ struct Mat4 {
    * @param z_far Far clipping plane distance.
    * @return 4x4 perspective matrix.
    */
-  [[nodiscard]] static Mat4 Perspective(Radians<T> fovy, T aspect, T z_near, T z_far) noexcept {
+  [[nodiscard]] static Mat4 Perspective(Radians<T> fovy, T aspect, T z_near, T z_far) noexcept 
+    requires std::floating_point<T>
+  {
     DICHOTOMIA_EXPECTS(fovy.value > T{0});
     DICHOTOMIA_EXPECTS(aspect != T{0});
     DICHOTOMIA_EXPECTS(z_near != z_far);
@@ -96,9 +109,9 @@ struct Mat4 {
     Mat4 result = {};
     result.cols[0][0] = T{1} / (aspect * tan_half_fovy);
     result.cols[1][1] = T{1} / tan_half_fovy;
-    result.cols[2][2] = -(z_far + z_near) / (z_far - z_near);
+    result.cols[2][2] = -z_far / (z_far - z_near);
     result.cols[2][3] = -T{1};
-    result.cols[3][2] = -(T{2} * z_far * z_near) / (z_far - z_near);
+    result.cols[3][2] = -(z_far * z_near) / (z_far - z_near);
 
     return result;
   }
@@ -113,7 +126,9 @@ struct Mat4 {
    * @param z_far Far clipping plane.
    * @return 4x4 orthographic matrix.
    */
-  [[nodiscard]] static constexpr Mat4 Orthographic(T left, T right, T bottom, T top, T z_near, T z_far) noexcept {
+  [[nodiscard]] static constexpr Mat4 Orthographic(T left, T right, T bottom, T top, T z_near, T z_far) noexcept 
+    requires std::floating_point<T>
+  {
     DICHOTOMIA_EXPECTS(left != right);
     DICHOTOMIA_EXPECTS(bottom != top);
     DICHOTOMIA_EXPECTS(z_near != z_far);
@@ -137,7 +152,9 @@ struct Mat4 {
    * @param up Up vector direction.
    * @return 4x4 view matrix.
    */
-  [[nodiscard]] static Mat4 LookAt(Vec3<T> eye, Vec3<T> center, Vec3<T> up) noexcept {
+  [[nodiscard]] static Mat4 LookAt(Vec3<T> eye, Vec3<T> center, Vec3<T> up) noexcept 
+    requires std::floating_point<T>
+  {
     DICHOTOMIA_EXPECTS(eye != center);
     const Vec3<T> f = (center - eye).Normalized();
     const Vec3<T> s = f.Cross(up).Normalized();
@@ -194,7 +211,9 @@ struct Mat4 {
    * @note Expects the matrix determinant to be non-zero.
    * @return The inverted 4x4 matrix.
    */
-  [[nodiscard]] constexpr Mat4 Inverse() const noexcept {
+  [[nodiscard]] constexpr Mat4 Inverse() const noexcept 
+    requires std::floating_point<T>
+  {
     const T a00 = cols[0][0], a01 = cols[0][1], a02 = cols[0][2], a03 = cols[0][3];
     const T a10 = cols[1][0], a11 = cols[1][1], a12 = cols[1][2], a13 = cols[1][3];
     const T a20 = cols[2][0], a21 = cols[2][1], a22 = cols[2][2], a23 = cols[2][3];
@@ -266,11 +285,25 @@ struct Mat4 {
     return cols[col][row];
   }
 
+  [[nodiscard]] constexpr Mat4 Transpose() const noexcept {
+    return {.cols = {{cols[0][0], cols[1][0], cols[2][0], cols[3][0]},
+                     {cols[0][1], cols[1][1], cols[2][1], cols[3][1]},
+                     {cols[0][2], cols[1][2], cols[2][2], cols[3][2]},
+                     {cols[0][3], cols[1][3], cols[2][3], cols[3][3]}}};
+  }
+
   [[nodiscard]] T* data() noexcept { return &cols[0][0]; }
   [[nodiscard]] const T* data() const noexcept { return &cols[0][0]; }
 };
 
 using Mat4f = Mat4<float>;
 using Mat4d = Mat4<double>;
+
+static_assert(std::is_trivially_copyable_v<Mat4f>, "Mat4f implementation is broken!");
+static_assert(std::is_trivially_copyable_v<Mat4d>, "Mat4d implementation is broken!");
+static_assert(sizeof(Mat4f) == sizeof(float) * 16, "Mat4f has padding issues!");
+static_assert(alignof(Mat4f) == alignof(float), "Mat4f alignment is broken!");
+static_assert(sizeof(Mat4d) == sizeof(double) * 16, "Mat4d has padding issues!");
+static_assert(alignof(Mat4d) == alignof(double), "Mat4d alignment is broken!");
 
 }  // namespace dich::math
