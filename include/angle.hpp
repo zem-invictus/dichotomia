@@ -35,6 +35,7 @@ struct Degrees {
  * @return Angle in degrees.
  */
 template <MathScalar T>
+  requires std::floating_point<T>
 [[nodiscard]] constexpr Degrees<T> ToDegrees(Radians<T> radians) noexcept {
   return Degrees(radians.value * (T{180} / std::numbers::pi_v<T>));
 }
@@ -45,6 +46,7 @@ template <MathScalar T>
  * @return Angle in radians.
  */
 template <MathScalar T>
+  requires std::floating_point<T>
 [[nodiscard]] constexpr Radians<T> ToRadians(Degrees<T> degrees) noexcept {
   return Radians(degrees.value * (std::numbers::pi_v<T> / T{180}));
 }
