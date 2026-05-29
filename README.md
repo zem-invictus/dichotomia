@@ -1,4 +1,4 @@
-# Dichotomia v1.0
+# Dichotomia
 
 A minimalistic, modern C++23 math library for basic 3D graphics applications. It provides core linear algebra components with an emphasis on `constexpr` and modern C++ features, alongside seamless, high-performance Python bindings via `nanobind` (with full NumPy buffer protocol support).
 
