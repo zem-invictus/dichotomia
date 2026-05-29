@@ -40,10 +40,43 @@ target_compile_definitions(dichotomia
 
 target_include_directories(dichotomia INTERFACE
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-        $<INSTALL_INTERFACE:include>
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
 
-if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME)
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+install(TARGETS dichotomia
+    EXPORT dichotomiaTargets
+    FILE_SET HEADERS
+)
+
+install(EXPORT dichotomiaTargets
+    FILE dichotomiaTargets.cmake
+    NAMESPACE dichotomia::
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dichotomia
+)
+
+configure_package_config_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmake/dichotomiaConfig.cmake.in
+    ${CMAKE_CURRENT_BINARY_DIR}/dichotomiaConfig.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dichotomia
+)
+
+write_basic_package_version_file(
+    ${CMAKE_CURRENT_BINARY_DIR}/dichotomiaConfigVersion.cmake
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/dichotomiaConfig.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/dichotomiaConfigVersion.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/dichotomia
+)
+
+option(DICHOTOMIA_BUILD_TESTING "Build tests and benchmarks" OFF)
+if(CMAKE_PROJECT_NAME STREQUAL PROJECT_NAME AND DICHOTOMIA_BUILD_TESTING)
     enable_testing()
     add_subdirectory(tests)
     add_subdirectory(benchmarks)
