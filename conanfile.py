@@ -3,7 +3,7 @@ from conan.tools.cmake import CMake, CMakeToolchain, cmake_layout
 
 class DichotomiaConan(ConanFile):
     name = "dichotomia"
-    version = "1.0.0"
+    version = "1.0.1"
     license = "MIT"
     author = "zem-invictus"
     url = "https://github.com/zem-invictus/dichotomia"
