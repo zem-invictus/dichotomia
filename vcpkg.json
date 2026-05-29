@@ -1,0 +1,8 @@
+{
+  "name": "dichotomia",
+  "version": "1.0.0",
+  "description": "C++23 mathematical library",
+  "homepage": "https://github.com/zem-invictus/dichotomia",
+  "license": "MIT",
+  "dependencies": []
+}
